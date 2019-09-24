@@ -143,6 +143,4 @@ But it's the best structure in most situations.
     ```
 
 ## Key Benefits
-  * None of the business logic is done in the activity.
-
-  
+  * None of the business logic is done in the activity java code.
