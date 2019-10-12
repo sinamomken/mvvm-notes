@@ -36,7 +36,7 @@ But it's the best structure in most situations.
     * Once observber is resumed, it would be notified of the latest data from the LiveData.
   ![livedata_diagram.png](livedata_diagram.png)
     * `LiveData` itself is an Abstract Class -> Can't be instantiated directly.
-      * Use one type of LiveData implementations described in [Types of LiveData](#markdown-header-types-of-livedata)
+      * Use one type of LiveData implementations described in [Types of LiveData](#types-of-livedata)
   * dependency in build.gradle:
     ```
     // Lifecycle components
@@ -155,4 +155,4 @@ But it's the best structure in most situations.
   * Android activity is hard to be unit tested but ViewModel and LiveData are easier.
     * That's why logic side is done in Presenter (MVP), ViewModel (MVVM), Controller(MVC), etc.
 
-## Types of LiveData
+## <a name="types-of-livedata"></a> Types of LiveData
