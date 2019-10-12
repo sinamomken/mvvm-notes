@@ -155,4 +155,4 @@ But it's the best structure in most situations.
   * Android activity is hard to be unit tested but ViewModel and LiveData are easier.
     * That's why logic side is done in Presenter (MVP), ViewModel (MVVM), Controller(MVC), etc.
 
-## <a name="types-of-livedata"></a> Types of LiveData
+## Types of LiveData
