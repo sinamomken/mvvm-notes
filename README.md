@@ -4,6 +4,7 @@ Notes of studying about Model View View-Model architecture, and Repository desig
 Sources:
   * https://www.youtube.com/watch?v=ijXjCtCXcN4&list=PLgCYzUzKIBE8M2SMSIEZ6jJepG6qD0ugX&index=4&t=1146s
   * https://codingwithmitch.com/blog/getting-started-with-mvvm-android/
+  * https://medium.com/@elye.project/understanding-live-data-made-simple-a820fcd7b4d0
 
 ## Benefits
   * UI kept away from business logic
@@ -29,6 +30,13 @@ But it's the best structure in most situations.
 
 ## LiveData and MutableLiveData
   * are data types in MVVM to observe changes in data.
+  * LiveData = an observable data holder class, but lifecycle-aware -> it only updates component observers in an active lifecycle state.
+    * Unlike RxJava, it doesn't blindly notify all observers, but first checks their live state.
+      * No need to unsubscribe it in onPause or onDestroy (as in Rx).
+    * Once observber is resumed, it would be notified of the latest data from the LiveData.
+  ![livedata_diagram.png](livedata_diagram.png)
+    * `LiveData` itself is an Abstract Class -> Can't be instantiated directly.
+      * Use one type of LiveData implementations described in [Types of LiveData](#markdown-header-types-of-livedata)
   * dependency in build.gradle:
     ```
     // Lifecycle components
@@ -142,5 +150,9 @@ But it's the best structure in most situations.
     })
     ```
 
-## Key Benefits
+## Key Benefits of MVVM
   * None of the business logic is done in the activity java code.
+  * Android activity is hard to be unit tested but ViewModel and LiveData are easier.
+    * That's why logic side is done in Presenter (MVP), ViewModel (MVVM), Controller(MVC), etc.
+
+## Types of LiveData
