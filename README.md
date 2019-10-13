@@ -156,3 +156,73 @@ But it's the best structure in most situations.
     * That's why logic side is done in Presenter (MVP), ViewModel (MVVM), Controller(MVC), etc.
 
 ## Types of LiveData
+  * **MutableLiveData**:
+    * Defining and triggering it:
+    ```kotlin
+    // Declaring it in Kotlin
+    val liveDataA = MutableLiveData<String>()
+    // Trigger value change in Worker Thread
+    liveDataA.value = someValue
+    // i.e.
+    liveDataA.setValue(someValue)
+    // Trigger value change in UI Thread
+    liveDataA.postValue(someValue)
+    ```
+    * Observing it:
+    ```kotlin
+    class someFragment : Fragment() {
+      private val changeObserver = Observer<String> { value -> value?.let{ txt_fragment.text = it }}
+
+      override fun onAttach(context : Context?) {
+        super.onAttach(context)
+        someLiveData.observe(this, changeObserver)
+      }
+
+      ...
+    }
+    ```
+  * **Transformations.map**:
+  ```kotlin
+      ...
+      override fun onAttach(context: Context?){
+        super.onAttach(context)
+        val transformedLiveData = Transformations.map(sourceLiveDataA) {"A:$it"} //lambda as last argument
+        transformedLiveData.observe(this, changeObserver)
+      }
+      ...
+
+  ```
+  * **MediatorLiveData**: A kind of LiveData taking many LiveData sources, changing its value according to observers for each source LiveData.
+  ![MediatorLiveData Diagram](mediatorlivedata_diagram.png)
+  ```kotlin
+      ...
+      override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        val mediatorLiveData = MediatorLiveData<String>()
+        mediatorLiveData.addSource(liveDataOfA){ mediatorLiveData.value = "A:$it" }
+        mediatorLiveData.addSource(liveDataOfB){ mediatorLiveData.value = "B:$it" }
+      }
+      ...
+  ```
+    * **Flaw**: After Activity not being alive, MediatorLiveData only restores the *last added* LiveData in the code.
+  * **Transformations.switchMap**: A special MediatorLiveData to switch between multiple sources of LiveData based on a **trigger LiveData**.
+  ![SwitchMap Diagram](switchmap_diagram.png)
+    * It only selects 1 LivaData as the output MediatorLiveData.
+  ```kotlin
+      ...
+      override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        val outputLiveData = Transformations.switchMap(liveDataOfSwitch) {
+          switch ->
+            if(switch){
+              liveDataOfA
+            } else {
+              liveDataOfB
+            }
+        }
+        outputLiveData.observe(this, changeObserver)
+      }
+      ...
+  ```
+    * Usage ex: Using user login session as the trigger LiveData.
